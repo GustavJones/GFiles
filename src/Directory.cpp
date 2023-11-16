@@ -11,10 +11,16 @@ GFiles::Directory::Directory(const Path &_directoryPath)
 
 bool GFiles::Directory::exists()
 {
-    if (stat(m_directoryPath->path.c_str(), nullptr) == 0)
-        return true;
+    struct stat st;
+    if (stat(m_directoryPath->path.c_str(), &st) == 0)
+    {
+        if (std.st_mod & S_IFDIR != 0)
+            return true;
+    }
     else
+    {
         return false;
+    }
 }
 
 void GFiles::Directory::createDirectory()

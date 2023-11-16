@@ -6,13 +6,16 @@ GFiles::Directory::Directory(const Path &_directoryPath)
 {
 }
 
-bool GFiles::Directory::exists()
-{
-    return false;
-}
-
 #ifdef unix
 #include <sys/stat.h>
+
+bool GFiles::Directory::exists()
+{
+    if (stat(m_directoryPath->path.c_str(), nullptr) == 0)
+        return true;
+    else
+        return false;
+}
 
 void GFiles::Directory::createDirectory()
 {

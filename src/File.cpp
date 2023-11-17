@@ -28,7 +28,10 @@ void GFiles::File::create()
 void GFiles::File::load()
 {
     loadData();
-    m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out | std::ios::app | std::ios::ate);
+    if (m_exists)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out | std::ios::app | std::ios::ate);
+    }
 }
 
 void GFiles::File::loadData()

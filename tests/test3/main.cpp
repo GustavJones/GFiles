@@ -19,14 +19,15 @@ int main(int argc, char const *argv[])
     // std::cout << f1.read() << '\n'
     //           << '\n';
 
-    GFiles::File f1(GFiles::Path("C:\\CXXProjects\\GFiles\\tests\\test3\\test.json", '\\'));
-    f1.create();
+    GFiles::File f1(GFiles::Path("C:\\CXXProjects\\GFiles\\build\\Debug\\tests\\test2\\test2.exe", '\\'));
+    GFiles::File f2(GFiles::Path("C:\\CXXProjects\\GFiles\\build\\Debug\\tests\\test2\\test2-Copy.exe", '\\'));
 
-    std::cout << f1.read() << "\n";
-    f1.write("Write\n");
-    f1.append("Append\n");
+    f2.create();
 
-    std::cout << f1.read() << "\n";
+    char *buffer = f1.read();
+    std::cout << buffer << "\n";
+
+    f2.write(buffer, f1.size());
 
     return 0;
 }

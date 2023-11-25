@@ -10,22 +10,21 @@ namespace GFiles
         Path m_filePath;
         std::fstream m_file;
         bool m_exists;
-        short m_size;
+        int m_size;
         char *m_buffer;
-        bool m_read;
+        bool m_bufferCreate;
 
         void load();
-        void loadData();
 
     public:
         File(Path _filePath);
         bool exists();
         void create();
         void remove();
-        short size();
+        int size();
         char *read();
-        void write(std::string _buffer);
-        void append(std::string _buffer);
+        void write(char *_buffer, int _len);
+        void append(char *_buffer, int _len);
         ~File();
     };
 } // namespace GFiles

@@ -13,11 +13,12 @@ namespace GFiles
         int m_size;
         char *m_buffer;
         bool m_bufferCreate;
+        bool m_isBinary;
 
         void load();
 
     public:
-        File(Path _filePath);
+        File(Path _filePath, bool _isBinary);
         bool exists();
         void create();
         void remove();

@@ -2,8 +2,8 @@
 #include <fstream>
 #include <iostream>
 
-GFiles::File::File(Path _filePath)
-    : m_filePath(_filePath), m_exists(false), m_bufferCreate(false)
+GFiles::File::File(Path _filePath, bool _isBinary)
+    : m_filePath(_filePath), m_exists(false), m_bufferCreate(false), m_isBinary(_isBinary)
 {
     load();
 }
@@ -25,7 +25,15 @@ void GFiles::File::create()
 
 void GFiles::File::load()
 {
-    m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out | std::ios::app | std::ios::ate);
+    if (m_isBinary)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out | std::ios::app | std::ios::ate);
+    }
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::in | std::ios::out | std::ios::app | std::ios::ate);
+    }
+
     if (m_file.is_open())
     {
         m_exists = true;
@@ -81,7 +89,14 @@ char *GFiles::File::read()
         std::cerr << "Warning: File Doesn't exist. Cannot Read" << '\n';
         return nullptr;
     }
-    m_file.open(m_filePath.path, std::ios::binary | std::ios::in);
+    if (m_isBinary)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::in);
+    }
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::in);
+    }
 
     if (m_size > 0)
     {
@@ -103,7 +118,15 @@ void GFiles::File::write(char *_buffer, int _len)
 {
     remove();
     create();
-    m_file.open(m_filePath.path, std::ios::binary | std::ios::out);
+
+    if (m_isBinary)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::out);
+    }
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::out);
+    }
 
     const char *buffer = _buffer;
 
@@ -115,17 +138,15 @@ void GFiles::File::write(char *_buffer, int _len)
 void GFiles::File::append(char *_buffer, int _len)
 {
     load();
-    // char *leftoverData = this->read();
 
-    // if (leftoverData != 0)
-    // {
-    //     this->write(leftoverData + _buffer, m_size + _len);
-    // }
-    // else
-    // {
-    //     this->write(_buffer, m_size);
-    // }
-    m_file.open(m_filePath.path, std::ios::binary | std::ios::out | std::ios::app);
+    if (m_isBinary)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::out | std::ios::app);
+    }
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::out | std::ios::app);
+    }
 
     const char *buffer = _buffer;
 

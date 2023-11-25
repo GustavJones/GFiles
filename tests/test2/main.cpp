@@ -13,5 +13,8 @@ int main(int argc, char const *argv[])
     // d1.createDirectory();
     d1.removeDirectory();
     std::cout << d1.exists() << '\n';
+
+    std::cin.get();
+
     return 0;
 }

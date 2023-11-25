@@ -3,7 +3,7 @@
 #include <iostream>
 
 GFiles::File::File(Path _filePath)
-    : m_filePath(_filePath)
+    : m_filePath(_filePath), m_exists(false)
 {
     m_read = false;
     load();
@@ -36,7 +36,7 @@ void GFiles::File::load()
 
 void GFiles::File::loadData()
 {
-    m_file.open(m_filePath.path);
+    m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out);
     if (m_file.is_open())
     {
         m_exists = true;
@@ -103,8 +103,5 @@ void GFiles::File::append(std::string _buffer)
 GFiles::File::~File()
 {
     m_file.close();
-    if (m_read)
-    {
-        delete[] m_buffer;
-    }
+    delete[] m_buffer;
 }

@@ -4,7 +4,7 @@
 GFiles::Path::Path(std::string _path, char _delimiter)
     : path(_path), m_delimiter(_delimiter)
 {
-    short lastDelimiterPos;
+    short lastDelimiterPos = -1;
 
     // Check for empty directories
     if (path == "")
@@ -27,12 +27,25 @@ GFiles::Path::Path(std::string _path, char _delimiter)
     // Last delimiter
     lastDelimiterPos = path.find_last_of(m_delimiter);
 
-    // Check for . and test for file
-    for (int i = lastDelimiterPos; i < path.length(); i++)
+    if (lastDelimiterPos == -1)
     {
-        if (path[i] == '.')
+        for (int i = 0; i < path.length(); i++)
         {
-            m_isFile == true;
+            if (path[i] == '.')
+            {
+                m_isFile = true;
+            }
+        }
+    }
+    else
+    {
+        // Check for . and test for file
+        for (int i = lastDelimiterPos; i < path.length(); i++)
+        {
+            if (path[i] == '.')
+            {
+                m_isFile = true;
+            }
         }
     }
 }
@@ -75,7 +88,8 @@ std::string GFiles::Path::filename()
         return "";
     }
 
-    int periodPos, delimiterPos;
+    int periodPos;
+    int delimiterPos = -1;
     std::string output;
 
     for (int i = path.length() - 1; i >= 0; i--)

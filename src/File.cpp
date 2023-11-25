@@ -2,12 +2,10 @@
 #include <fstream>
 #include <iostream>
 
-GFiles::File::File(Path _filePath)
-    : m_filePath(_filePath), m_exists(false)
+GFiles::File::File(Path _filePath, bool _isBinary)
+    : m_filePath(_filePath), m_exists(false), m_bufferCreate(false), m_isBinary(_isBinary)
 {
-    m_read = false;
     load();
-    m_buffer = new char[m_size + 1]; // + 1 to include str terminator char
 }
 
 bool GFiles::File::exists()
@@ -19,29 +17,40 @@ void GFiles::File::create()
 {
     if (!m_exists)
     {
-        m_file.open(m_filePath.path, std::ios::out | std::ios::trunc);
+        if (m_isBinary)
+        {
+            m_file.open(m_filePath.path, std::ios::binary | std::ios::out);
+        }
+        else
+        {
+            m_file.open(m_filePath.path, std::ios::out);
+        }
         m_file.close();
-        load();
     }
 }
 
 void GFiles::File::load()
 {
-    loadData();
-    if (m_exists)
+    if (m_isBinary)
     {
-        m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out | std::ios::app | std::ios::ate);
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out);
     }
-}
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::in | std::ios::out);
+    }
 
-void GFiles::File::loadData()
-{
-    m_file.open(m_filePath.path, std::ios::binary | std::ios::in | std::ios::out);
     if (m_file.is_open())
     {
         m_exists = true;
+
+        m_file.seekg(0, std::ios::beg);
+        int begin = m_file.tellg();
+
         m_file.seekg(0, std::ios::end);
-        m_size = m_file.tellg();
+        int end = m_file.tellg();
+
+        m_size = end - begin;
         m_file.seekg(0, std::ios::beg);
     }
     else
@@ -50,6 +59,17 @@ void GFiles::File::loadData()
         m_size = -1;
     }
     m_file.close();
+
+    if (m_bufferCreate)
+    {
+        delete[] m_buffer;
+    }
+
+    if (m_size > 0)
+    {
+        m_bufferCreate = true;
+        m_buffer = new char[m_size];
+    }
 }
 
 void GFiles::File::remove()
@@ -57,51 +77,105 @@ void GFiles::File::remove()
     if (m_exists)
     {
         m_file.close();
-        m_exists = false;
-        m_size = -1;
         std::remove(m_filePath.path.c_str());
     }
 }
 
-short GFiles::File::size()
+int GFiles::File::size()
 {
     return m_size;
 }
 
 char *GFiles::File::read()
 {
+    load();
+
     if (!m_exists)
     {
         std::cerr << "Warning: File Doesn't exist. Cannot Read" << '\n';
         return nullptr;
     }
+    if (m_isBinary)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::in);
 
-    m_file.seekg(0, std::ios::beg);
-    m_file.read(m_buffer, m_size);
-    m_read = true;
-    m_buffer[m_size] = 0;
+        if (m_size > 0)
+        {
+            m_file.seekg(0, std::ios::beg);
+            m_file.read(m_buffer, m_size);
+            m_buffer[m_size - 1] = 0;
+        }
+        else
+        {
+            m_buffer = 0;
+        }
+    }
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::in);
+
+        std::string line;
+        std::string lines;
+        while (std::getline(m_file, line))
+        {
+            lines += line + '\n';
+        }
+        lines += (char)0;
+
+        return (char *)lines.c_str();
+    }
+
+    m_file.close();
 
     return m_buffer;
 }
 
-void GFiles::File::write(std::string _buffer)
+void GFiles::File::write(char *_buffer, int _len)
 {
     remove();
     create();
 
-    m_file.write(_buffer.c_str(), _buffer.length());
+    if (m_isBinary)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::out);
+    }
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::out);
+    }
+
+    char *buffer = _buffer;
+
+    m_file.write(buffer, _len);
     m_file.close();
     load();
 }
 
-void GFiles::File::append(std::string _buffer)
+void GFiles::File::append(char *_buffer, int _len)
 {
-    char *leftoverData = this->read();
-    this->write(leftoverData + _buffer);
+    load();
+
+    if (m_isBinary)
+    {
+        m_file.open(m_filePath.path, std::ios::binary | std::ios::out | std::ios::app);
+    }
+    else
+    {
+        m_file.open(m_filePath.path, std::ios::out | std::ios::app);
+    }
+
+    const char *buffer = _buffer;
+
+    m_file.write(buffer, _len);
+    m_file.close();
+    load();
 }
 
 GFiles::File::~File()
 {
     m_file.close();
-    delete[] m_buffer;
+    if (m_bufferCreate)
+    {
+        delete[] m_buffer;
+    }
 }

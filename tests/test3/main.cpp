@@ -19,8 +19,8 @@ int main(int argc, char const *argv[])
     // std::cout << f1.read() << '\n'
     //           << '\n';
 
-    GFiles::File f1(GFiles::Path("C:\\CXXProjects\\GFiles\\build\\Debug\\tests\\test2\\test2.exe", '\\'));
-    GFiles::File f2(GFiles::Path("C:\\CXXProjects\\GFiles\\build\\Debug\\tests\\test2\\test2-Copy.exe", '\\'));
+    GFiles::File f1(GFiles::Path("C:\\CXXProjects\\GFiles\\build\\Debug\\tests\\test2\\test2.exe", '\\'), true);
+    GFiles::File f2(GFiles::Path("C:\\CXXProjects\\GFiles\\build\\Debug\\tests\\test2\\test2-Copy.exe", '\\'), true);
 
     f2.create();
 

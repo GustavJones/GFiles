@@ -18,7 +18,7 @@ namespace GFiles
         void load();
 
     public:
-        File(Path _filePath, bool _isBinary);
+        File(Path _filePath, bool _isBinary = false);
         bool exists();
         void create();
         void remove();

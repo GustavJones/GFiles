@@ -12,6 +12,7 @@ namespace GFiles
         bool m_exists;
         int m_size;
         char *m_buffer;
+        std::string m_bufferStr;
         bool m_bufferCreate;
         bool m_isBinary;
 

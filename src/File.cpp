@@ -98,21 +98,29 @@ char *GFiles::File::read()
     if (m_isBinary)
     {
         m_file.open(m_filePath.path, std::ios::binary | std::ios::in);
+
+        if (m_size > 0)
+        {
+            m_file.seekg(0, std::ios::beg);
+            m_file.read(m_buffer, m_size);
+            m_buffer[m_size - 1] = 0;
+        }
+        else
+        {
+            m_buffer = 0;
+        }
     }
     else
     {
         m_file.open(m_filePath.path, std::ios::in);
-    }
 
-    if (m_size > 0)
-    {
-        m_file.seekg(0, std::ios::beg);
-        m_file.read(m_buffer, m_size);
-        m_buffer[m_size - 1] = 0;
-    }
-    else
-    {
-        m_buffer = 0;
+        std::string line;
+        while (std::getline(m_file, line))
+        {
+            m_bufferStr += line + '\n';
+        }
+
+        return (char *)m_bufferStr.c_str();
     }
 
     m_file.close();

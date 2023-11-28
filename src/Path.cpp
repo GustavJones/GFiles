@@ -12,11 +12,11 @@ GFiles::Path::Path(std::string _path, char _delimiter)
         throw std::out_of_range("Path object is empty");
     }
 
-    // Check for directories with a starting space
-    if (path.find(m_delimiter + ' ') != -1)
-    {
-        throw std::invalid_argument("Path contains directory that starts with a space");
-    }
+    // // Check for directories with a starting space
+    // if (path.find(m_delimiter + ' ') != -1)
+    // {
+    //     throw std::invalid_argument("Path contains directory that starts with a space");
+    // }
 
     // Check for double usage of delimiter
     if (path.find(m_delimiter + m_delimiter) != -1)

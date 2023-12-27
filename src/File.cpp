@@ -103,7 +103,7 @@ char *GFiles::File::read()
         {
             m_file.seekg(0, std::ios::beg);
             m_file.read(m_buffer, m_size);
-            m_buffer[m_size - 1] = 0;
+            // m_buffer[m_size - 1] = 0;
         }
         else
         {

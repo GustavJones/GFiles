@@ -27,6 +27,7 @@ namespace GFiles
         char *read();
         void write(char *_buffer, int _len);
         void append(char *_buffer, int _len);
+        Path path();
         ~File();
     };
 } // namespace GFiles

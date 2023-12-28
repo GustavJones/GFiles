@@ -169,6 +169,11 @@ void GFiles::File::append(char *_buffer, int _len)
     load();
 }
 
+GFiles::Path GFiles::File::path()
+{
+    return m_filePath;
+}
+
 GFiles::File::~File()
 {
     m_file.close();

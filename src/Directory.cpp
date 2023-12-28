@@ -17,10 +17,7 @@ bool GFiles::Directory::exists()
         if (st.st_mode & S_IFDIR != 0)
             return true;
     }
-    else
-    {
-        return false;
-    }
+    return false;
 }
 
 void GFiles::Directory::createDirectory()

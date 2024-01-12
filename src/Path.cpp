@@ -44,12 +44,12 @@ GFiles::Path::Path(std::string _path, char _delimiter)
   //  }
 }
 
-bool GFiles::Path::isfile() { return m_isFile; }
+// bool GFiles::Path::isfile() { return m_isFile; }
 
 std::string GFiles::Path::extension() {
-  if (!m_isFile) {
-    return "";
-  }
+  //  if (!m_isFile) {
+  //    return "";
+  //  }
 
   int periodPos;
   std::string output;
@@ -68,9 +68,9 @@ std::string GFiles::Path::extension() {
 }
 
 std::string GFiles::Path::filename() {
-  if (!m_isFile) {
-    return "";
-  }
+  //  if (!m_isFile) {
+  //    return "";
+  //  }
 
   int periodPos;
   int delimiterPos = -1;

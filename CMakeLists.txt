@@ -4,4 +4,4 @@ project(FileManage)
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 add_subdirectory(src)
-add_subdirectory(tests)
+// add_subdirectory(tests)

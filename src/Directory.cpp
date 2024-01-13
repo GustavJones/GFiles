@@ -1,6 +1,5 @@
 #include "Directory.hpp"
 #include <cstdlib>
-#include <iostream>
 #include <string>
 
 GFiles::Directory::Directory(const Path &_directoryPath)
@@ -23,14 +22,12 @@ void GFiles::Directory::createDirectory() {
   //  S_IXOTH);
   std::string command = "mkdir ";
   command += m_directoryPath->path;
-  std::cout << command << '\n';
   system(command.c_str());
 }
 
 void GFiles::Directory::removeDirectory() {
   std::string command = "rm -r ";
   command += m_directoryPath->path;
-  std::cout << command << '\n';
   system(command.c_str());
 
   //  remove(m_directoryPath->path.c_str());

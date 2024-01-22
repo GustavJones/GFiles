@@ -1,5 +1,6 @@
 #include "Directory.hpp"
 #include <cstdlib>
+#include <iostream>
 #include <string>
 
 GFiles::Directory::Directory(const Path &_directoryPath)
@@ -11,25 +12,35 @@ GFiles::Directory::Directory(const Path &_directoryPath)
 bool GFiles::Directory::exists() {
   struct stat st;
   if (stat(m_directoryPath->path.c_str(), &st) == 0) {
-    if (st.st_mode & S_IFDIR != 0)
+    if ((st.st_mode & S_IFDIR) != 0)
       return true;
   }
   return false;
 }
 
 void GFiles::Directory::createDirectory() {
-  mkdir(m_directoryPath->path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-  //  std::string command = "mkdir ";
-  //  command += m_directoryPath->path;
-  //  system(command.c_str());
+  //  mkdir(m_directoryPath->path.c_str(), S_IRWXU | S_IRWXG | S_IROTH |
+  //  S_IXOTH);
+
+  if (exists()) {
+    std::cout << "Directory Exists" << '\n';
+    return;
+  }
+  std::string command = "mkdir ";
+  command += m_directoryPath->path;
+  system(command.c_str());
 }
 
 void GFiles::Directory::removeDirectory() {
-  // std::string command = "rm -r ";
-  //  command += m_directoryPath->path;
-  //  system(command.c_str());
+  if (!exists()) {
+    std::cout << "Directory Doesnt Exist" << '\n';
+    return;
+  }
+  std::string command = "rm -r ";
+  command += m_directoryPath->path;
+  system(command.c_str());
 
-  remove(m_directoryPath->path.c_str());
+  //  remove(m_directoryPath->path.c_str());
 }
 
 #elif _WIN32

@@ -18,19 +18,18 @@ bool GFiles::Directory::exists() {
 }
 
 void GFiles::Directory::createDirectory() {
-  //  mkdir(m_directoryPath->path.c_str(), S_IRWXU | S_IRWXG | S_IROTH |
-  //  S_IXOTH);
-  std::string command = "mkdir ";
-  command += m_directoryPath->path;
-  system(command.c_str());
+  mkdir(m_directoryPath->path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  //  std::string command = "mkdir ";
+  //  command += m_directoryPath->path;
+  //  system(command.c_str());
 }
 
 void GFiles::Directory::removeDirectory() {
-  std::string command = "rm -r ";
-  command += m_directoryPath->path;
-  system(command.c_str());
+  // std::string command = "rm -r ";
+  //  command += m_directoryPath->path;
+  //  system(command.c_str());
 
-  //  remove(m_directoryPath->path.c_str());
+  remove(m_directoryPath->path.c_str());
 }
 
 #elif _WIN32

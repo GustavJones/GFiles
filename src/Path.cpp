@@ -13,6 +13,7 @@ GFiles::Path::Path(std::string _path) : path(_path) {}
 
 std::string GFiles::Path::extension() {
   std::string output;
+  std::string reversed;
 
   if (!isfile()) {
     return "";
@@ -29,11 +30,16 @@ std::string GFiles::Path::extension() {
     i--;
   }
 
-  return output;
+  for (int i = output.length() - 1; i >= 0; i--) {
+    reversed += output[i];
+  }
+
+  return reversed;
 }
 
 std::string GFiles::Path::filename() {
   std::string output;
+  std::string reversed;
 
   int i = path.length() - 1;
   while (path[i] != '/' && i != -1) {
@@ -41,7 +47,11 @@ std::string GFiles::Path::filename() {
     i--;
   }
 
-  return output;
+  for (int i = output.length() - 1; i >= 0; i--) {
+    reversed += output[i];
+  }
+
+  return reversed;
 }
 
 GFiles::Path::~Path() {}

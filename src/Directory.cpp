@@ -2,11 +2,13 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <vector>
 
 GFiles::Directory::Directory(const Path &_directoryPath)
     : m_directoryPath(&_directoryPath) {}
 
 #ifdef unix
+#include <dirent.h>
 #include <sys/stat.h>
 
 bool GFiles::Directory::exists() {
@@ -41,6 +43,27 @@ void GFiles::Directory::removeDirectory() {
   system(command.c_str());
 
   //  remove(m_directoryPath->path.c_str());
+}
+
+std::vector<GFiles::Path> GFiles::Directory::listDirectory() {
+  std::vector<GFiles::Path> output;
+  DIR *dir;
+  struct dirent *ent;
+
+  if ((dir = opendir(m_directoryPath->path.c_str())) != nullptr) {
+    while ((ent = readdir(dir)) != nullptr) {
+      std::string filename(ent->d_name);
+      if (filename != "." && filename != "..") {
+        output.push_back((GFiles::Path)filename);
+      }
+    }
+    closedir(dir);
+  } else {
+    std::cerr << "Could not open directory" << std::endl;
+    return std::vector<GFiles::Path>();
+  }
+
+  return output;
 }
 
 #elif _WIN32

@@ -1,21 +1,22 @@
 #pragma once
 #include "Path.hpp"
+#include <vector>
 
-namespace GFiles
-{
-    class Directory
-    {
-    private:
-        const Path *m_directoryPath;
+namespace GFiles {
+class Directory {
+private:
+  const Path *m_directoryPath;
 
-    public:
-        Directory(const Path &_directoryPath);
+public:
+  Directory(const Path &_directoryPath);
 
-        bool exists();
+  bool exists();
 
-        void createDirectory();
-        void removeDirectory();
+  void createDirectory();
+  void removeDirectory();
 
-        ~Directory();
-    };
+  std::vector<Path> listDirectory();
+
+  ~Directory();
+};
 } // namespace GFiles
